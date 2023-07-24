@@ -27,13 +27,21 @@ const client = new MongoClient(uri, {
       // Connect the client to the server	(optional starting in v4.7)
       // await client.connect();
   
-      // ----------------------------------COLLECTION----------------------------------
-      const usersCollection = client.db("ClgBooking").collection("users");
+    // Send a ping to confirm a successful connection 
+    const collegeCollection = client.db('ClgBooking').collection("colleges")
+      
+      app.get("/colleges", async (req, res) => {
+        const data = await collegeCollection.find().toArray()
+        res.send(data)
 
-      const classCollection = client.db("ClgBooking").collection("Courses");
-      const myClassCollection = client.db("ClgBooking").collection("myclass");
-      const bookMarkCollection = client.db("ClgBooking").collection("bookMarks");
+    })
+    app.get("/colleges/:id", async (req, res) => {
+        const id = req.params.id
+        const query = { _id: new ObjectId(id) }
+        const result = await collegeCollection.find(query).toArray()
+        res.send(result)
 
+    })
 
 
 
@@ -52,9 +60,9 @@ const client = new MongoClient(uri, {
   run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("LearnUp is sitting");
+  res.send("Server is sitting");
 });
 
 app.listen(port, () => {
-  console.log(`LearnUp is sitting on port ${port}`);
+  console.log(`Server is sitting on port ${port}`);
 });
